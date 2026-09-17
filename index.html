@@ -15,20 +15,20 @@
 :root{--bg:#070b14;--panel:#0d1524;--purple:#8b5cf6;--green:#34d399;--text:#e6edf7;--muted:#93a4bd}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-main{max-width:760px}
-h1{font-size:40px;letter-spacing:-.02em;text-align:center}
-.tag{color:var(--muted);font-size:16px;margin-top:10px;text-align:center}
-.line{margin:26px 0 30px;font-size:19px;font-weight:600;text-align:center}
-.line b{color:var(--green)}
+main{max-width:760px;width:100%}
+.line-svg{display:block;width:100%;height:auto;margin:26px 0 30px}
+.line-svg text{font-family:inherit;font-weight:700;fill:var(--text)}
 footer{margin-top:34px;color:var(--muted);font-size:13px;text-align:center;line-height:1.7}
-img.footer-art{display:block;height:180px;width:auto;margin:26px auto 6px;opacity:.92;-webkit-mask-image:linear-gradient(90deg,transparent,black 18%,black 82%,transparent);mask-image:linear-gradient(90deg,transparent,black 18%,black 82%,transparent)}img.hero{width:100%;height:auto;border-radius:14px;border:1px solid #1e2a44;box-shadow:0 0 60px rgba(52,211,153,.14);margin-bottom:22px}</style>
+img.footer-art{display:block;height:180px;width:auto;margin:26px auto 6px;opacity:.92;-webkit-mask-image:linear-gradient(90deg,transparent,black 18%,black 82%,transparent);mask-image:linear-gradient(90deg,transparent,black 18%,black 82%,transparent)}
+img.hero{width:100%;height:auto;border-radius:14px;border:1px solid #1e2a44;box-shadow:0 0 60px rgba(52,211,153,.14);margin-bottom:22px}
+</style>
 </head>
 <body>
 <main>
   <img class="hero" src="assets/header.webp" alt="Holographic settlement gate — Ishvir and Company (Pty) Ltd">
-  <h1>Ishvir Jackpersad</h1>
-  <p class="tag">Founder — Ishvir and Company (Pty) Ltd · South Africa · CIPC-registered</p>
-  <p class="line">Evolving the Blockchain...</p>
+  <svg class="line-svg" viewBox="0 0 760 90" role="img" aria-label="Evolving the Blockchain...">
+    <text x="380" y="66" text-anchor="middle" font-size="56" textLength="760" lengthAdjust="spacingAndGlyphs">Evolving the Blockchain...</text>
+  </svg>
   <img class="footer-art" src="assets/footer-art.png" alt="Sentinel artwork — © Ishvir and Company (Pty) Ltd"><footer>ish@ishvir.xyz · © Ishvir and Company (Pty) Ltd · 🏛️</footer>
 </main>
 </body>

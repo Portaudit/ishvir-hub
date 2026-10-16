@@ -21,6 +21,13 @@ main{max-width:760px;width:100%}
 footer{margin-top:34px;color:var(--muted);font-size:13px;text-align:center;line-height:1.7}
 img.footer-art{display:block;height:180px;width:auto;margin:26px auto 6px;opacity:.92;-webkit-mask-image:linear-gradient(90deg,transparent,black 18%,black 82%,transparent);mask-image:linear-gradient(90deg,transparent,black 18%,black 82%,transparent)}
 img.hero{width:100%;height:auto;border-radius:14px;border:1px solid #1e2a44;box-shadow:0 0 60px rgba(52,211,153,.14);margin-bottom:22px}
+.sites{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0}
+.site{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px solid #1e2a44;border-radius:14px;padding:16px;color:var(--text);text-decoration:none}
+.site:hover{border-color:var(--green)}
+.site img,.site svg{width:56px;height:56px;border-radius:12px;flex:none;object-fit:cover}
+.site b{display:block;font-size:18px}
+.site span{display:block;color:var(--muted);font-size:13px;line-height:1.45;margin-top:2px}
+@media(max-width:620px){.sites{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -29,7 +36,17 @@ img.hero{width:100%;height:auto;border-radius:14px;border:1px solid #1e2a44;box-
   <svg class="line-svg" viewBox="0 0 760 90" role="img" aria-label="Evolving the Blockchain...">
     <text x="380" y="66" text-anchor="middle" font-size="56" textLength="760" lengthAdjust="spacingAndGlyphs">Evolving the Blockchain...</text>
   </svg>
-  <img class="footer-art" src="assets/footer-art.png" alt="Sentinel artwork — © Ishvir and Company (Pty) Ltd"><footer>ish@ishvir.xyz · © Ishvir and Company (Pty) Ltd · 🏛️</footer>
+  <div class="sites">
+    <a class="site" href="https://trustrail.live">
+      <img src="assets/trustrail-emblem.webp" alt="TrustRail emblem">
+      <div><b>TrustRail</b><span>Outcome verification and settlement for AI agent-to-agent commerce.</span></div>
+    </a>
+    <a class="site" href="https://thereferee.xyz">
+      <svg viewBox="0 0 56 56" role="img" aria-label="Referee mark"><rect width="56" height="56" rx="12" fill="#f2a93b"/><text x="28" y="38" text-anchor="middle" font-size="30" font-weight="700" fill="#0f1419" font-family="ui-sans-serif,system-ui,Helvetica,Arial,sans-serif">Re</text><rect x="12" y="43" width="32" height="3" fill="#0f1419"/></svg>
+      <div><b>Referee</b><span>An independent settlement authority for Solana DvP trades. Devnet, unaudited.</span></div>
+    </a>
+  </div>
+  <img class="footer-art src="assets/footer-art.png" alt="Sentinel artwork — © Ishvir and Company (Pty) Ltd"><footer>ish@ishvir.xyz · © Ishvir and Company (Pty) Ltd · 🏛️</footer>
 </main>
 </body>
 </html>

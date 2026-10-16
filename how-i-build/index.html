@@ -23,18 +23,18 @@ a{color:var(--green)}
 <body>
 <main>
   <h1>How I build</h1>
-  <p>I use AI to interrogate concepts, news releases and product releases, to find trends and design opportunities, and to draft code, documentation and scripts for the pipelines I build. I use Claude, Meta AI, and Hermes (an agent in my own WSL, running an NVIDIA Nemotron model through OpenRouter), plus a one-off question to ChatGPT.</p>
+  <p>I use AI to interrogate concepts, news releases and product releases, to find trends and design opportunities, and to draft code, documentation and scripts for the pipelines I build. I use Claude, Meta AI, and Hermes (an agent in my own WSL, running an NVIDIA Nemotron model through OpenRouter), plus the occasional question to ChatGPT.</p>
   <p>I make the design decisions, run everything on devnet, and check each claim against the chain myself. I decide what counts as proof: nothing goes in a deck or a demo without a transaction signature behind it. I run every command myself and paste the real output, including the failures, and several of my best decisions have come from the failures.</p>
   <h2>The boundary I hold</h2>
   <ul>
     <li>AI is for velocity: drafting programs, scripts and documentation.</li>
     <li>Signing keys stay in local keypair files that are never committed to a repository, and no seed phrase or signing keypair is ever pasted into an AI chat.</li>
-    <li>Before I publish a repository, I scan its git history for key material (<a href="https://github.com/Portaudit/referee/blob/main/scripts/keyscan.py">the script</a>).</li>
+    <li>Before I publish a repository, I scan its git history for key material (<a href="https://github.com/Portaudit/referee/blob/main/scripts/keyscan.py" target="_blank" rel="noopener noreferrer">the script</a>).</li>
     <li>Where an AI draft and the chain disagree, the chain decides.</li>
     <li>Every on-chain result I publish points to a transaction signature. Limits are stated as limits, not as results.</li>
   </ul>
   <p>AI drafts a lot. I run every transaction myself.</p>
-  <p class="muted">See it applied: <a href="https://github.com/Portaudit/referee#how-this-was-built">how Referee was built</a>. <a href="/">Back to ishvir.xyz</a></p>
+  <p class="muted">See it applied: <a href="https://github.com/Portaudit/referee#how-this-was-built" target="_blank" rel="noopener noreferrer">how Referee was built</a>. <a href="/">Back to ishvir.xyz</a></p>
 </main>
 </body>
 </html>

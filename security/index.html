@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security checks — Ishvir Jackpersad</title>
+<link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+<meta name="description" content="Dated, scoped security checks on Ishvir Jackpersad's Solana repositories and devnet wallets, with their limits stated.">
+<style>
+:root{--bg:#070b14;--panel:#0d1524;--green:#34d399;--text:#e6edf7;--muted:#93a4bd}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.65;padding:48px 24px}
+main{max-width:720px;margin:0 auto}
+h1{font-size:34px;margin-bottom:24px}
+p{margin-bottom:18px}
+h2{font-size:20px;margin:30px 0 12px}
+ul{margin:0 0 18px 22px}
+li{margin-bottom:10px}
+a{color:var(--green)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+.muted{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Security checks</h1>
+  <p>Checked on 17 October 2026. Everything below is a point-in-time check of the patterns and addresses named, run with my own scanner. It is not proof that nothing sensitive exists, and the programs are devnet and unaudited.</p>
+  <h2>Key material in git history</h2>
+  <ul>
+    <li>I scanned the full git history of 16 of my own repositories (14 pushed to my GitHub account, 2 local only) with <a href="https://github.com/Portaudit/referee/blob/main/scripts/keyscan.py" target="_blank" rel="noopener noreferrer"><code>keyscan.py</code></a>. It validates base58 keypairs by deriving their public key, and also looks for key arrays, hex keys, private-key blocks, common token patterns and key-like file names.</li>
+    <li>Result: 0 valid keypairs, 0 private-key blocks and 0 token-like strings in all 16.</li>
+    <li>In the Referee repository I also searched every commit for key-related keywords and file names. The only matches were documentation text and the scanner's own search patterns.</li>
+    <li>As a second, independent check, GitHub secret scanning is on for four repositories: Referee, verifex-live, ishvir-hub and my profile repository. On 17 October 2026 each showed 0 open and 0 closed alerts. GitHub's scanner looks for known provider token formats and does not recognise Solana keypairs.</li>
+    <li>As a third check, I ran <a href="https://github.com/gitleaks/gitleaks" target="_blank" rel="noopener noreferrer">Gitleaks</a> v8.30.1, an independent open-source scanner, over the full history of 14 of my own repositories. 12 reported no leaks (one of them has no commits yet). Referee reported 10 matches and solana-fall-transfer-hook reported 1, and I reviewed each one. All 10 Referee matches are the same value: the public address of Referee's authority account (<code>GE7FbxTFG1ExcvCCuqScLxto65uw5rHqQFpwrH3cDyew</code>), assigned to a constant named <code>EXPECTED_AUTH</code> in ten places in the scripts' history. On devnet that account is owned by the System Program and holds 0.01190752 SOL, as stated below. The one transfer-hook match is an entry on line 10 of <code>Anchor.toml</code>, in the <code>[programs.localnet]</code> section, in the same format as that repository's own program ID. It has no account on devnet, and I treat it as a program ID, not a key. The Referee repository's <code>.gitleaksignore</code> lists the ten reviewed matches. Move it aside and run <code>gitleaks git</code> to see them unfiltered.</li>
+  </ul>
+  <h2>Authorship</h2>
+  <ul>
+    <li>Every commit in the Referee repository is authored by my GitHub account, and its contributors page lists one contributor. How I use AI is on <a href="/how-i-build/">How I build</a>.</li>
+  </ul>
+  <h2>Wallets</h2>
+  <ul>
+    <li>Signing keys are local keypair files outside the repositories. No keypair file is tracked in any of the 16.</li>
+    <li>The 56 devnet receipts for Referee were signed by 14 distinct addresses, three of which are program addresses. I checked all 14 on mainnet and each holds 0 SOL.</li>
+  </ul>
+  <h2>Receipts against the chain</h2>
+  <ul>
+    <li>The on-chain ledger of calls to the Referee program holds 43 transactions. 37 are receipts in <code>RECEIPTS.md</code> and 6 are successful calls listed only on the replay page (5 register-trade calls and 1 early call I did not decode). The replay page lists 62 signatures in total.</li>
+    <li>The other 19 receipts are transactions that do not call Referee: program deployments, direct DvP trades and the TrustRail Core steps.</li>
+  </ul>
+  <h2>Program funds and upgrades</h2>
+  <ul>
+    <li>Referee's authority address (a program-derived address) held 0.01190752 SOL on devnet when I checked. None of the program's seven instructions withdraws it. The only transfer out is the rent refund during settle.</li>
+    <li>Referee, Verifex and TrustRail Core are upgradeable by my wallet. That is a trust assumption. Referee has had five in-place upgrades, each listed in its receipts.</li>
+  </ul>
+  <h2>What this does not show</h2>
+  <ul>
+    <li>It covers only the patterns, repositories and addresses named above, on the date above.</li>
+    <li>The keypair checks were run with my own scanner. GitHub secret scanning and Gitleaks are independent of it, but they look for known token formats and generic key-like strings.</li>
+    <li>No audit has been done on any of the programs.</li>
+  </ul>
+  <h2>Repeat it</h2>
+  <p>Clone <a href="https://github.com/Portaudit/referee" target="_blank" rel="noopener noreferrer">the Referee repository</a> and run <code>python3 scripts/keyscan.py --git</code> from its root. For the wallets, read the signatures in <code>docs/RECEIPTS.md</code>, fetch each transaction from a Solana RPC, list its signers, and check their mainnet balances.</p>
+  <p class="muted"><a href="/how-i-build/">How I build</a> &middot; <a href="/">Back to ishvir.xyz</a></p>
+</main>
+</body>
+</html>

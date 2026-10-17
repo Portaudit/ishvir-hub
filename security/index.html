@@ -58,6 +58,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
     <li>The keypair checks were run with my own scanner. GitHub secret scanning and Gitleaks are independent of it, but they look for known token formats and generic key-like strings.</li>
     <li>No audit has been done on any of the programs.</li>
   </ul>
+  <h2>Why I check this way</h2>
+  <p>My background is in accounting and finance. I wrote my Honours thesis on post-project appraisals, and I was trained to assess the risk of material misstatement. This page is that habit applied to my own code: state the claim, state what was tested, and state what was not.</p>
   <h2>Repeat it</h2>
   <p>Clone <a href="https://github.com/Portaudit/referee" target="_blank" rel="noopener noreferrer">the Referee repository</a> and run <code>python3 scripts/keyscan.py --git</code> from its root. For the wallets, read the signatures in <code>docs/RECEIPTS.md</code>, fetch each transaction from a Solana RPC, list its signers, and check their mainnet balances.</p>
   <p class="muted"><a href="/how-i-build/">How I build</a> &middot; <a href="/">Back to ishvir.xyz</a></p>

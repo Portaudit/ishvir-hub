@@ -50,13 +50,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
   <h2>Program funds and upgrades</h2>
   <ul>
     <li>Referee's authority address (a program-derived address) held 0.01190752 SOL on devnet when I checked. None of the program's seven instructions withdraws it. The only transfer out is the rent refund during settle.</li>
-    <li>Referee, Verifex and TrustRail Core are upgradeable by my wallet. That is a trust assumption. Referee has had five in-place upgrades, each listed in its receipts.</li>
+    <li>Referee, Verifex and TrustRail Core are upgradeable by my wallet. That is a trust assumption. Referee has had seven in-place upgrades, five of them listed in its receipts.</li>
+    <li>On 18 October 2026 I found four issues in Referee during my own code review and fixed them in two upgrades, each tested on devnet. What I did not fix is listed in the same log: <a href="https://github.com/Portaudit/referee/blob/main/docs/FIXES-18-OCT.md" target="_blank" rel="noopener noreferrer">docs/FIXES-18-OCT.md</a>.</li>
+    <li>Verifex's base path does not bind the presented agent program to the credential's subject, and its credentials last seven days and cannot be renewed by Verifex.</li>
   </ul>
   <h2>What this does not show</h2>
   <ul>
     <li>It covers only the patterns, repositories and addresses named above, on the date above.</li>
     <li>The keypair checks were run with my own scanner. GitHub secret scanning and Gitleaks are independent of it, but they look for known token formats and generic key-like strings.</li>
-    <li>No audit has been done on any of the programs.</li>
+    <li>No audit has been done on Referee, Verifex or TrustRail Core. Cantina reviewed the Solana Foundation's DvP program in May 2026; that review did not cover these programs.</li>
   </ul>
   <h2>Why I check this way</h2>
   <p>My background is in accounting and finance. I wrote my Honours thesis on post-project appraisals, and I was trained to assess the risk of material misstatement. This page is that habit applied to my own code: state the claim, state what was tested, and state what was not.</p>

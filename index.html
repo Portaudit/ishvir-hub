@@ -28,6 +28,7 @@ img.hero{width:100%;height:auto;max-height:272px;object-fit:cover;border-radius:
 .site b{display:block;font-size:18px}
 .site span{display:block;color:var(--muted);font-size:13px;line-height:1.45;margin-top:2px}
 @media(max-width:620px){.sites{grid-template-columns:1fr}}
+.more{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 18px;margin:16px 4px 8px}.more a{color:#93a4bd;font-size:17px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}.more a:hover{color:#fff}
 </style>
 </head>
 <body>
@@ -54,7 +55,14 @@ img.hero{width:100%;height:auto;max-height:272px;object-fit:cover;border-radius:
       <div><b>Feasibility note</b><span>Can a program-derived address be a DvP settlement authority? The answer on devnet, with receipts.</span></div>
     </a>
   </div>
-  <img class="footer-art" src="assets/footer-art.png" alt="Sentinel artwork — © Ishvir and Company (Pty) Ltd"><footer><a href="how-i-build/" style="color:inherit">How I build</a> · ish@ishvir.xyz · © Ishvir and Company (Pty) Ltd · 🏛️</footer>
+  <nav class="more" aria-label="More about this work">
+    <a href="how-i-build">How I build</a>
+    <a href="security">Security checks</a>
+    <a href="https://github.com/Portaudit/referee/graphs/contributors?from=7%2F11%2F2026" target="_blank" rel="noopener noreferrer">Contributor stats</a>
+    <a href="https://github.com/Portaudit/referee#how-this-was-built" target="_blank" rel="noopener noreferrer">How Referee was built</a>
+    <a href="mailto:ish@ishvir.xyz">ish@ishvir.xyz</a>
+  </nav>
+  <img class="footer-art" src="assets/footer-art.png" alt="Sentinel artwork — © Ishvir and Company (Pty) Ltd">
 </main>
 </body>
 </html>

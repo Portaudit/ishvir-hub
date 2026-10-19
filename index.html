@@ -29,6 +29,7 @@ img.hero{width:100%;height:auto;max-height:272px;object-fit:cover;border-radius:
 .site span{display:block;color:var(--muted);font-size:13px;line-height:1.45;margin-top:2px}
 @media(max-width:620px){.sites{grid-template-columns:1fr}}
 .more{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 18px;margin:16px 4px 8px}.more a{color:#93a4bd;font-size:17px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}.more a:hover{color:#fff}
+.why{grid-column:1/-1;display:block}.why .why-pt{margin-top:9px;font-size:14px;line-height:1.5}.why strong{color:#cfd8e6;font-weight:600}
 </style>
 </head>
 <body>
@@ -54,6 +55,17 @@ img.hero{width:100%;height:auto;max-height:272px;object-fit:cover;border-radius:
       <svg viewBox="0 0 56 56" role="img" aria-label="Feasibility note mark"><rect width="56" height="56" rx="12" fill="#1e2a44"/><path d="M17 12h16l8 8v24H17z" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linejoin="round"/><path d="M33 12v8h8" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linejoin="round"/><path d="M22 28h14M22 34h14M22 40h9" stroke="#93a4bd" stroke-width="2.5" stroke-linecap="round"/></svg>
       <div><b>Feasibility note</b><span>Can a program-derived address be a DvP settlement authority? The answer on devnet, with receipts.</span></div>
     </a>
+    <div class="site why">
+      <div>
+        <b>Why Solana, why now?</b>
+        <span>Settlement comes down to who gets to say "now". On Solana that can be a program, not a person.</span>
+        <span class="why-pt"><strong>A program can be the signer.</strong> A program-derived address has no private key, so nothing can sign for it except the program it was derived from. That is all of Referee: the DvP trade names that address as its settlement authority, and only Referee's code can use it.</span>
+        <span class="why-pt"><strong>Refusals are receipts.</strong> A refused settle still lands on chain, costs the 5,000-lamport fee and stays there for anyone to check: error 3012 for an unregistered trade, 6012 for a revoked credential. 56 devnet signatures, 6 refusals, all in the repo.</span>
+        <span class="why-pt"><strong>The settlement layer is public.</strong> The Solana Foundation's DvP program swaps two tokens atomically, and Cantina reviewed it in May 2026. I did not change a line of it. Referee sits beside it.</span>
+        <span class="why-pt"><strong>Why now.</strong> DvP is being built in the open: as of 19 October 2026 it has open pull requests for confidential settlement and Token-2022 mint extensions. A settlement authority that is a key somebody holds is the part I wanted to take out, and replacing it with rules is possible today. That is my read, not a claim about anyone's roadmap.</span>
+        <span class="why-pt">Devnet only, unaudited. Receipts: <a href="https://thereferee.xyz" style="color:inherit">thereferee.xyz</a> and docs/RECEIPTS.md.</span>
+      </div>
+    </div>
   </div>
   <nav class="more" aria-label="More about this work">
     <a href="how-i-build">How I build</a>

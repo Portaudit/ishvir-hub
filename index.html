@@ -55,15 +55,44 @@ img.hero{width:100%;height:auto;max-height:272px;object-fit:cover;border-radius:
       <svg viewBox="0 0 56 56" role="img" aria-label="Feasibility note mark"><rect width="56" height="56" rx="12" fill="#1e2a44"/><path d="M17 12h16l8 8v24H17z" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linejoin="round"/><path d="M33 12v8h8" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linejoin="round"/><path d="M22 28h14M22 34h14M22 40h9" stroke="#93a4bd" stroke-width="2.5" stroke-linecap="round"/></svg>
       <div><b>Feasibility note</b><span>Can a program-derived address be a DvP settlement authority? The answer on devnet, with receipts.</span></div>
     </a>
-    <div class="site why">
+    <a class="site" href="#why-solana">
+      <svg viewBox="0 0 56 56" role="img" aria-label="Why Solana mark"><rect width="56" height="56" rx="12" fill="#a78bfa"/><text x="28" y="38" text-anchor="middle" font-size="30" font-weight="700" fill="#1b1033" font-family="ui-sans-serif,system-ui,Helvetica,Arial,sans-serif">Ww</text><rect x="6" y="43" width="44" height="3" fill="#1b1033"/></svg>
+      <div><b>Why Solana, why now?</b><span>My own answer, after years in accounting and finance.</span></div>
+    </a>
+    <a class="site" href="#solana-is-home">
+      <svg viewBox="0 0 56 56" role="img" aria-label="Solana is Home mark"><rect width="56" height="56" rx="12" fill="#1e2a44"/><path d="M13 29L28 16l15 13" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 27v15h20V27" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 42v-8h6v8" fill="none" stroke="#93a4bd" stroke-width="2.5" stroke-linejoin="round"/></svg>
+      <div><b>Solana is Home</b><span>Spotlights on my Fall School classmates: who they are and what they built.</span></div>
+    </a>
+    <div class="site why" id="why-referee">
       <div>
-        <b>Why Solana, why now?</b>
+        <b>Why Referee, why DvP</b>
         <span>Settlement comes down to who gets to say "now". On Solana that can be a program, not a person.</span>
         <span class="why-pt"><strong>A program can be the signer.</strong> A program-derived address has no private key, so nothing can sign for it except the program it was derived from. That is all of Referee: the DvP trade names that address as its settlement authority, and only Referee's code can use it.</span>
         <span class="why-pt"><strong>Refusals are receipts.</strong> A refused settle still lands on chain, costs the 5,000-lamport fee and stays there for anyone to check: error 3012 for an unregistered trade, 6012 for a revoked credential. 56 devnet signatures, 6 refusals, all in the repo.</span>
         <span class="why-pt"><strong>The settlement layer is public.</strong> The Solana Foundation's DvP program swaps two tokens atomically, and Cantina reviewed it in May 2026. I did not change a line of it. Referee sits beside it.</span>
         <span class="why-pt"><strong>Why now.</strong> DvP is being built in the open: as of 19 October 2026 it has open pull requests for confidential settlement and Token-2022 mint extensions. A settlement authority that is a key somebody holds is the part I wanted to take out, and replacing it with rules is possible today. That is my read, not a claim about anyone's roadmap.</span>
         <span class="why-pt">Devnet only, unaudited. Receipts: <a href="https://thereferee.xyz" style="color:inherit">thereferee.xyz</a> and docs/RECEIPTS.md.</span>
+      </div>
+    </div>
+    <div class="site why" id="why-solana">
+      <div>
+        <b>Why Solana, why now?</b>
+        <span>My own answer, after years in accounting and finance.</span>
+        <span class="why-pt"><strong>Settlement is the quiet part.</strong> In accounting and finance it is the step nobody sees until it fails. I wanted to build somewhere that step can be checked by anyone.</span>
+        <span class="why-pt"><strong>The layer is public.</strong> On Solana anyone can read the program, the transactions and the receipts. That let me learn it by building, one verifiable step at a time.</span>
+        <span class="why-pt"><strong>What I like about it.</strong> The fees are small enough to try something, get refused and try again, and every attempt leaves a public record. The Foundation publishes its work in the open: DvP is MIT licensed, and I could read all of it.</span>
+        <span class="why-pt"><strong>Why now.</strong> The Foundation's DvP program is being built in the open, and the Solana Fall School gave me the time, the teachers, the learning notes, the repos, the guest lecturers, the thought leaders and a cohort to learn it with.</span>
+      </div>
+    </div>
+    <div class="site why" id="solana-is-home">
+      <div>
+        <b>Solana is Home</b>
+        <span>I ended my Demo Day presentation with "Solana is home."</span>
+        <span class="why-pt">The Fall School gave me a place to learn how to build properly, and a cohort that worked through the same demanding weeks.</span>
+        <span class="why-pt">For me, home is a place to learn by building, with teachers who share what they know and receipts anyone can check.</span>
+        <span class="why-pt">For builders everywhere, it is open code, public data and a community that shares what it learns. A builder in Durban can read the same programs as anyone else and deploy to the same network.</span>
+        <span class="why-pt">Thank you to the Solana Foundation, to Anatoly Yakovenko and Raj Gokal for starting it, and to everyone who teaches, builds, contributes and encourages in the open. I hope to experience Breakpoint one day.</span>
+        <span class="why-pt">Spotlights on my classmates will be added here as they are made: who they are, what they built, and why Solana, why now.</span>
       </div>
     </div>
   </div>

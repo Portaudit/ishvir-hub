@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solana Confidential Compute: What It Is and What It Proves</title><meta name="description" content="An independent guide to what Solana Confidential Compute lets an app check, and what that check does not prove. Written as of 22 November 2026."><link rel="icon" href="../../assets/favicon-64.png">
+<meta property="og:title" content="Solana Confidential Compute: What It Is and What It Proves"><meta property="og:description" content="An independent guide to what Solana Confidential Compute lets an app check, and what that check does not prove. Written as of 22 November 2026."><meta property="og:type" content="article"><meta property="og:url" content="https://ishvir.xyz/how-i-see-it/solana-confidential-compute/"><meta property="og:image" content="https://ishvir.xyz/assets/hisi-solana-x.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Solana Confidential Compute: What It Is and What It Proves"><meta name="twitter:description" content="An independent guide to what Solana Confidential Compute lets an app check, and what that check does not prove. Written as of 22 November 2026."><meta name="twitter:image" content="https://ishvir.xyz/assets/hisi-solana-x.png">
+<style>*{box-sizing:border-box}html{background:#070b14}body{margin:0;background:#070b14;color:#e6edf7;font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:28px 20px 60px}a{color:#34d399}a:hover{color:#6ee7b7}
+.kick{color:#d9843b;font-weight:600;margin:0 0 6px}h1{font-size:34px;line-height:1.2;margin:0 0 10px}h2{font-size:22px;margin:38px 0 8px;border-top:1px solid #1b2740;padding-top:22px}
+.muted{color:#93a4bd;font-size:14px}.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;margin:14px 0;font-size:15px}
+th,td{border:1px solid #1b2740;padding:8px 10px;text-align:left;vertical-align:top}th{background:#0d1524;color:#34d399}
+ul,ol{padding-left:22px}li{margin:6px 0}.cover{width:100%;border-radius:10px;margin:16px 0;border:1px solid #1b2740}
+.flow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.flow div{background:#0d1524;border:1px solid #1b2740;border-top:3px solid #34d399;border-radius:8px;padding:12px 14px;font-size:14px}
+.flow b{display:block;color:#d9843b;margin-bottom:6px}@media(max-width:560px){.flow{grid-template-columns:1fr}}
+.card{display:block;background:#0d1524;border:1px solid #1b2740;border-radius:10px;padding:14px 16px;margin:12px 0;text-decoration:none;color:#e6edf7}
+.card b{display:block;color:#34d399}.soon{opacity:.6}</style></head><body><main><p class="kick">How I see it...</p><h1>Solana Confidential Compute: What It Is and What It Proves</h1><p class="muted">By Ishvir Jackpersad · As of 22 November 2026 · Drafted with AI assistance, see <a href="../../how-i-build">How I build</a></p><img class="cover" src="../../assets/hisi-solana-x.png" alt="Cover of the guide: Solana Confidential Compute, an independent guide"><p>Solana Confidential Compute is a toolkit that lets an app check, on Solana, that an AI answer came from hardware-isolated memory. <a href="https://cryptobriefing.com/solana-foundation-confidential-compute-trynitoai/">The Solana Foundation and the private AI startup Nito (tryNito.ai) launched it on 13 November 2026 as an open-source, unaudited beta on devnet</a>, and <a href="https://x.com/SolanaFndn/status/2121273736330436868">the Foundation says to use it for development only</a>.</p>
+<h2>Summary</h2>
+<p>The release has three parts: an open-source SDK, an onchain program that records hardware verification results, and a chat starter template. The hardware check proves which machine setup signed an answer. It does not prove the answer is correct, and the Foundation's product page says the first chat does not yet use the onchain program (section 5).</p>
+<p>This guide explains the problem it targets, how the pieces fit, who runs what, what the beta can and cannot show, and what to ask before relying on it. It is written as of 22 November 2026, nine days after launch, from the Foundation's launch post and product page on solana.ai, its X thread, press coverage and published security research. I rechecked the product page and AMD's advisory on 22 November and found no change in audit or mainnet status. Where sources differ, the text says so. It was drafted with AI assistance.</p>
+<h2>1. The scenario: private AI and the trust gap</h2>
+<p>People now send AI services personal conversations, internal documents and trading strategies. When a provider says those inputs stay private, <a href="https://solanacompass.com/news/solana-foundation-and-nito-launch-solana-confidential-compute-on-devnet-to-verify-private-ai-onchain">users usually have to take its word for it</a>.</p>
+<p>Confidential computing is one answer. <a href="https://x.com/SolanaFndn/status/2121273736330436868">As the Foundation describes it, a trusted execution environment (TEE) is a hardware-backed space that isolates code and data from the host operating system and the infrastructure operator</a>. Data stays protected while it is being processed, not only while stored or sent.</p>
+<p>A second problem follows. Even if a provider runs a TEE, outsiders need a way to check that claim. TEEs support this with attestation: <a href="https://cryptobriefing.com/solana-foundation-confidential-compute-trynitoai/">a signed statement from the hardware about what is running inside the protected section</a>. Solana Confidential Compute aims to make that check public and reusable by putting its result on a blockchain.</p>
+<h2>2. What was released</h2>
+<p><a href="https://cryptobriefing.com/solana-foundation-confidential-compute-trynitoai/">The launch centres on an open-source SDK and an onchain verification program</a>. <a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">The Foundation also published a Confidential Chat developer template built with Next.js and React</a>. <a href="https://solana.ai/confidential-compute">The product page</a> also lists Rust and TypeScript SDKs, helpers for checking the verifier's record from your own program, a daemon that runs inside the enclave, a command-line tool and a Docker image.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Part</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDK (open source)</td>
+<td>Developer software for building private AI apps and checking the hardware behind them</td>
+</tr>
+<tr>
+<td>Verification program (onchain)</td>
+<td>Checks hardware reports and records the result on Solana</td>
+</tr>
+<tr>
+<td>Confidential Chat template</td>
+<td>A starter app for private AI chat</td>
+</tr>
+</tbody>
+</table></div>
+<p>The release sits on solana.ai, <a href="https://huggingnews.com/ai/solana-launches-tools-for-private-ai-with-onchain-hardware-verification-4ec62009">a new hub for AI on Solana</a>. <a href="https://www.kucoin.com/news/flash/solana-launches-private-ai-tool-with-on-chain-hardware-verification">The Foundation presents the same components as reusable by other teams, and Nito is building them into its own private AI platform</a>.</p>
+<h2>3. How it works</h2><div class="flow"><div><b>Setup</b>1. A protected machine makes a signing key inside itself.<br>2. The hardware signs a report linking the key to a recent Solana slot.<br>3. The onchain program checks the report and records the key, hardware type and expiry.</div><div><b>Use</b>4. The machine signs AI responses with that key.<br>5. An app checks the signature against the onchain record.<br>6. The app accepts or refuses the output.</div></div>
+<p>The diagram shows 3 setup steps and 3 use steps. It is my summary of the sources, not a figure from the Foundation.</p>
+<p><a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">A protected machine makes a signing key inside itself. The hardware produces a signed report that links the key to a recent Solana slot, and the onchain program checks the report and records the key, the hardware type and an expiry date</a>. <a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">The machine then signs AI responses with that key, and an application checks the signature against the onchain record before accepting the output</a>.</p>
+<p><a href="https://www.supercryptonews.com/solana-foundation-launches-on-chain-verification-infrastructure-for-private-ai/">The AI work itself happens off-chain, so conversations and private inputs are not published to the blockchain</a>. Only the verification record goes onchain.</p>
+<h2>4. Who built and runs what</h2>
+<p><a href="https://solana.ai/blog/nito-solana-confidential-compute">The launch post says the Nito team built the toolkit in coordination with the Solana Foundation</a>, while the Foundation's announcement says it was built with Nito. Nito is an AI platform that <a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">routes requests to the protected environment and is a required part of the chat template's setup</a>. <a href="https://trynito.ai/">Nito describes itself as a chat service that runs chats through privacy-preserving hardware</a>. <a href="https://solana.ai/confidential-compute">The product page says the server and Nito cannot read the prompt or the reply</a>, which is a claim about access, not about what is stored.</p>
+<p>In the chat template, a message takes this route, according to the same coverage:</p>
+<ol>
+<li>The browser checks the confidential machine's attestation before encrypting the message. If the check fails, the prompt is not sent.</li>
+<li>The encrypted message passes through an application server and Nito to a protected environment running the model.</li>
+<li>The response is encrypted before it returns. By design, the intermediaries cannot read the contents.</li>
+</ol>
+<p><strong>Who owns the hardware.</strong> <a href="https://solana.ai/confidential-compute">The product page says the chat's model runs in confidential hardware through Tinfoil's confidential router, with Nito passing the encrypted prompt along</a>. <a href="https://solana.ai/blog/nito-solana-confidential-compute">The launch post separately names Nito as the operator of its own confidential hardware for its private AI platform</a>, so they describe two deployments: the chat on solana.ai, and Nito's own platform. <a href="https://solana.ai/confidential-compute">For the verifier itself, the product page names AMD SEV-SNP on Google Cloud Confidential VMs, AWS Nitro Enclaves and Google Confidential Space</a>. Neither page says who would run hardware for other developers. The product page lists AWS Nitro Enclaves alongside AMD SEV-SNP; Nitro Enclaves is a separate AWS technology, not AMD SEV-SNP. <a href="https://solana.ai/">solana.ai describes itself as presenting products and teams building AI on Solana</a>, and I found no evidence that it operates the confidential hardware, although it does run the chat's application server.</p>
+<h2>5. Status and supported hardware</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status as of 22 November 2026</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network</td>
+<td><a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">Solana devnet beta, launched 13 November</a></td>
+</tr>
+<tr>
+<td>Audit</td>
+<td><a href="https://x.com/SolanaFndn/status/2121273736330436868">Unaudited; the Foundation says it is intended for development</a>. <a href="https://solana.ai/confidential-compute">The product page says the audit is in progress, mainnet is "not yet" and follows the audit, and development use only until then</a></td>
+</tr>
+<tr>
+<td>Intel TDX, AMD SEV-SNP</td>
+<td><a href="https://solana.ai/blog/nito-solana-confidential-compute">Intel TDX and AMD SEV-SNP attestations are supported in the beta, per the launch post</a>. <a href="https://solana.ai/confidential-compute">The product page names AMD SEV-SNP on Google Cloud, AWS Nitro Enclaves and Google Confidential Space, and does not mention Intel TDX</a></td>
+</tr>
+<tr>
+<td>NVIDIA GPU attestation</td>
+<td><a href="https://x.com/SolanaFndn/status/2121273736330436868">In development</a></td>
+</tr>
+<tr>
+<td>Chat template and the onchain program</td>
+<td><a href="https://solana.ai/confidential-compute">The product page says the chat does not use the onchain verifier yet; the browser checks the router's attestation directly. The live chat is at solana.ai/chat, and the chat on the product page is a simulated demo</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>Three points follow. First, <a href="https://solana.ai/blog/nito-solana-confidential-compute">the launch post says NVIDIA GPU attestation is in progress</a>, and <a href="https://solana.ai/confidential-compute">the product page does not mention NVIDIA</a>. That concerns the onchain toolkit; I did not check whether the chat's model host attests its own GPUs. Second, the headline "verified onchain" describes the toolkit. <a href="https://solana.ai/confidential-compute">The product page says the current chat does not use the onchain verifier yet</a>, while <a href="https://solana.ai/blog/nito-solana-confidential-compute">the launch post says Nito verifies its hardware with the toolkit</a>. Third, <a href="https://solana.ai/confidential-compute">the product page says mainnet follows the audit</a> and <a href="https://solana.ai/blog/nito-solana-confidential-compute">the launch post says it is coming soon</a>; no date has been given.</p>
+<p><a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">Analytics Insight places the launch after Solana's 9 November startup ideas, which included an AI inference market, and the 10 November launch of Solana Privacy Rings</a>, so it is one piece of a wider push.</p>
+<h2>6. What the shipping chat actually proves</h2>
+<p>The one piece a developer can run today is the Confidential Chat template, and <a href="https://github.com/solana-foundation/templates/blob/main/community/confidential-chat/README.md">its README</a> is specific about what it does and does not prove.</p>
+<ul>
+<li><strong>What is checked.</strong> The browser verifies the enclave's attestation offline, against a repository pinned in the page code, and then encrypts the chat to the verified key. If the check fails, nothing is encrypted or sent. Nito relays the ciphertext to an enclave running Tinfoil's published router code.</li>
+<li><strong>No fresh challenge.</strong> The README says the attestation is not tied to a fresh challenge. Verification shows the key belongs to a genuine enclave running a published release, not that the attestation was produced just now. <a href="https://solana.ai/confidential-compute">The product page describes freshness as part of the onchain verifier's check</a>, and the chat does not use that verifier yet.</li>
+<li><strong>The host is not proved.</strong> The page shows which host the request was routed to, and the README says this is not part of the proof.</li>
+<li><strong>What you still trust.</strong> The page code you serve, since a changed page could send plaintext; the chip maker's signature on the report; and Tinfoil's router code, which verification shows is a published release but not that it is free of bugs.</li>
+<li><strong>What stays visible.</strong> Your server sees visitors' IP addresses. Nito sees the time, the model, the account and the size of each encrypted request. The enclave reads the prompt, because it has to in order to run the model.</li>
+<li><strong>Cost abuse.</strong> The output-token cap sits inside the encrypted request, so the server cannot enforce it. Only the byte cap, rate limits and the key's spend cap bound what a caller can spend, and the template leaves rate limiting and sign-in out on purpose.</li>
+<li><strong>No Solana step described.</strong> The README describes no step that reads or writes Solana, which fits the product page saying the chat does not use the onchain verifier yet. I did not see the template's package list. Analytics Insight reports that the template needs a funded Nito account and an API key, and Solana Compass reports that the chat's router runs the GPT-OSS 120B model.</li>
+</ul>
+<h2>7. Use cases the launch describes</h2>
+<p><a href="https://www.kucoin.com/news/flash/solana-launches-private-ai-tool-with-on-chain-hardware-verification">The Foundation lists personal assistants, agents that handle confidential business data, and private trading strategies</a>. <a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">The launch post adds systems that accept instructions or decisions only when signed by verified machines, such as AI rulings for prediction markets or insurance claims, and governance decisions</a>. <a href="https://huggingnews.com/ai/solana-launches-tools-for-private-ai-with-onchain-hardware-verification-4ec62009">One summary also mentions sovereign trading agents and autonomous decentralized organizations</a>.</p>
+<p>These are possibilities as presented at launch. <a href="https://solana.ai/confidential-compute">The product page presents a second product built on the toolkit: Milo, an autonomous trading agent</a>. That is the page's claim. I did not find a published attestation record for the hardware Milo runs on, and the product page does not link one. Treat the other use cases as directions rather than shipped products.</p>
+<h2>8. What it proves and what it does not</h2>
+<p>Attestation proves something about a machine, so read each claim for what it covers. The limits below apply to confidential computing in general and to any early beta, not only to this release.</p>
+<p><strong>What it can show.</strong> <a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">The hardware report identifies the protected environment and the software inside it, and the onchain program records the key, hardware type and expiry</a>. An app can then refuse outputs signed by a key with no valid record. For the chat, <a href="https://solana.ai/confidential-compute">the product page says each reply links the router's public build record and source code, so you can check them</a>. <a href="https://solana.ai/confidential-compute">The product page says the check covers the hardware chip signature, whether the code is on an approved list, and freshness so old proofs cannot be replayed, and that reading the record costs a program at most 1,500 compute units</a>.</p>
+<p><strong>What it does not show.</strong></p>
+<ul>
+<li><strong>That an answer is correct or fair.</strong> A signature shows which setup produced the answer, not whether the model was right. This is general background, not a claim from the sources.</li>
+<li><strong>That metadata is hidden.</strong> <a href="https://solana.ai/confidential-compute">The product page says the server sees when a prompt is sent, its size and the user's network address, and Nito sees the request and its size</a>. <a href="https://github.com/solana-foundation/templates/blob/main/community/confidential-chat/README.md">The template README says Nito sees the time, the model, the account and the size of each encrypted request</a>.</li>
+<li><strong>That the app is safe to run in public.</strong> <a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">Developers must add their own authentication, rate limits and abuse protections</a>.</li>
+</ul>
+<p><strong>What attestation generally protects against.</strong> This is general background on how trusted execution environments are usually assessed. Neither the launch post nor the product page says which of these attackers the design targets. <a href="https://solana.ai/confidential-compute">The product page does say the host cannot read sealed code and that keys are made in hardware and never leave it</a>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Attacker</th>
+<th>Typical coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Malicious operator or cloud administrator acting through software</td>
+<td><a href="https://ceur-ws.org/Vol-3962/paper70.pdf">In scope by design: the workload is isolated from the host operating system, the hypervisor and firmware, and attestation lets outsiders check this</a>. <a href="https://tomshardware.com/pc-components/researchers-attack-amds-infinity-fabric-to-bypass-hardware-security-protections-with-fabricked-flaw-lets-malicious-cloud-hosts-silently-read-confidential-vm-memory-and-forge-attestation-reports">Researchers have still shown that a malicious hypervisor or firmware can break SEV-SNP, for example forging attestation reports (Fabricked, April 2026)</a>.</td>
+</tr>
+<tr>
+<td>Compromised host software</td>
+<td><a href="https://ceur-ws.org/Vol-3962/paper70.pdf">Software attacks on the host are in scope by design, but denial of service is out of scope, so availability is not protected</a>. <a href="https://www.amd.com/en/resources/product-security/bulletin/AMD-SB-3020.html">AMD has published advisories with firmware fixes for host-level SEV-SNP issues</a>.</td>
+</tr>
+<tr>
+<td>Chip-level or physical attack</td>
+<td><a href="https://thehackernews.com/2025/10/new-teefail-side-channel-attack.html">Largely outside the chip makers' stated scope: Intel and AMD say physical attacks are out of scope</a>. <a href="https://thehackernews.com/2025/10/new-teefail-side-channel-attack.html">In October 2025, researchers showed with a memory-bus device costing under $1,000 that they could extract keys from Intel TDX and AMD SEV-SNP machines, in some cases including attestation keys, and AMD said it plans no mitigation</a>. The attack needs physical access to the machine. <a href="https://ethresear.ch/t/physical-integrity-attestation-and-the-state-of-permissionless-tees/24964">Software side channels can often be patched by microcode updates, while physical bus attacks cannot, so data-centre physical security is the main defence</a>.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Attestation shows what hardware and software started up. It does not show that answers are right. <a href="https://thehackernews.com/2025/10/new-teefail-side-channel-attack.html">The researchers say extracted attestation keys can be used to fake a successful attestation</a>. TEE.Fail needs physical access to a machine. Forging attestation is not only a physical-access problem: <a href="https://thehackernews.com/2026/11/new-mior-and-skyfall-attacks-let-rogue.html">The Hacker News reported on 13 November, the day of this launch, that the Mior attack lets a malicious host change a VM's memory and forge signed SEV-SNP attestation reports, and that Skyfall lets one read VM data</a>. <a href="https://www.amd.com/en/resources/product-security/bulletin/amd-sb-3059.html">AMD's advisory AMD-SB-3059 covers CVE-2026-0462, with SEV firmware dated 12 August 2026 and platform firmware targeted for December 2026</a>. The advisory itself lists only the CVE; The Hacker News names it as the advisory for Mior, a finding from an ETH Zurich team. The same article reports that AMD published a separate advisory, AMD-SB-3061, for Skyfall (CVE-2026-40671), with platform firmware planned for November 2026. I could not confirm whether that firmware has shipped. These are attacks on the hardware class, not on Solana's code, but who runs the machine and which firmware it runs both matter.</p>
+<p><strong>Other limits to weigh</strong></p>
+<ul>
+<li><strong>Beta status.</strong> <a href="https://x.com/SolanaFndn/status/2121273736330436868">It is unaudited, on devnet, and meant for development</a>.</li>
+<li><strong>Hardware coverage.</strong> <a href="https://x.com/SolanaFndn/status/2121273736330436868">NVIDIA GPU attestation is not ready</a>.</li>
+<li><strong>A public record.</strong> <a href="https://solana.ai/blog/nito-solana-confidential-compute">The onchain record shows the public signing key, hardware type and expiry date</a>. Publishing it is the point, since it lets anyone check a signed answer. The side effect, which is my general observation and not a finding from the sources, is that outsiders can see which keys and hardware types are active.</li>
+<li><strong>Threat model.</strong> <a href="https://solana.ai/confidential-compute">The product page is open about what stays visible and what you still trust: the user must trust the code the page serves, since encryption runs in it, and the model's enclave reads the prompt in order to run the model</a>. <a href="https://solana.ai/blog/nito-solana-confidential-compute">The launch post is a short announcement and gives no formal threat model</a>, and <a href="https://solana.ai/confidential-compute">the product page links the Confidential Chat template on solana.com</a>, and <a href="https://github.com/solana-foundation/templates/blob/main/community/confidential-chat/README.md">the template's README is public on GitHub</a>, but I could not find documentation or a public repository for the SDK or the onchain verifier program itself. Check what attestation guarantees against the project's documentation once it is published.</li>
+<li><strong>Trust in chip makers.</strong> TEE security rests on the hardware vendor's design and signing keys. Researchers have published attacks on TEEs before, so a TEE reduces trust in an operator but does not remove trust in the hardware. See the table above for what vendors and researchers have said.</li>
+<li><strong>Moving target.</strong> <a href="https://solana.ai/confidential-compute">The product page now says plainly that the chat does not use the verifier yet</a>. Wording and details changed within days of launch, so check the current pages before you build on any detail here. On 22 November the page still said mainnet follows the audit, with no date.</li>
+</ul>
+<h2>9. Questions to ask before relying on it</h2>
+<ol>
+<li><strong>Who runs the machines,</strong> and can I see the attestation for the exact ones serving my requests? The pages name Tinfoil's router for the chat's model and Nito for its own platform, but not who runs hardware for other developers. The template README says the host shown under each reply is not part of the proof.</li>
+<li><strong>Who does the checking:</strong> my app, the browser, or the onchain record? The product page says the chat checks in the browser today, not onchain.</li>
+<li><strong>Which software do I accept?</strong> The report identifies the software in the enclave, so decide which version you trust and who publishes it. The product page says each chat reply links the router's public build record and source code, which you can check. The template README says the browser verifies against a repository pinned in the page code.</li>
+<li><strong>Which hardware and which expiry?</strong> The launch post says Intel TDX and AMD SEV-SNP, with NVIDIA GPU attestation in progress; the product page names AMD SEV-SNP on Google Cloud, AWS Nitro Enclaves and Google Confidential Space. Also ask which SEV-SNP firmware and attestation version the enclave reports, and whether it includes the fixes in AMD's published advisories, for example <a href="https://www.amd.com/en/resources/product-security/bulletin/amd-sb-3059.html">AMD-SB-3059</a>, which AMD lists with platform firmware targeted for December 2026 on most EPYC lines.</li>
+<li><strong>Is the visible metadata acceptable?</strong> IP addresses, account, model, timing and message size can be seen by intermediaries.</li>
+<li><strong>What is the audit and mainnet plan?</strong> Until the audit is done and published, keep to testing.</li>
+<li><strong>What happens when a key expires or a hardware flaw is disclosed?</strong> Ask how records are refreshed or revoked. I found nothing on this in the sources.</li>
+</ol>
+<h2>Sources</h2>
+<p>Pages below were opened or returned by search on 15, 16 and 22 November 2026. On 22 November I reopened the product page, AMD-SB-3059 and The Hacker News article, but could not reopen the launch post, so its details are from my earlier reading. The Foundation's <a href="https://solana.ai/blog/nito-solana-confidential-compute">launch post on solana.ai</a> and the product page were read as tool-made summaries, not line by line. One article (Solana Compass) failed to load, so I used only its search excerpt.</p>
+<ul>
+<li><a href="https://www.analyticsinsight.net/news/solana-unveils-private-ai-toolkit-with-intel-and-amd-hardware-support-on-devnet">Analytics Insight: Solana unveils private AI toolkit with Intel and AMD hardware support</a></li>
+<li><a href="https://cryptobriefing.com/solana-foundation-confidential-compute-trynitoai/">Crypto Briefing: Solana Foundation launches Confidential Compute with TryNitoAI</a></li>
+<li><a href="https://x.com/SolanaFndn/status/2121273736330436868">Solana Foundation on X: launch thread</a></li>
+<li><a href="https://www.kucoin.com/news/flash/solana-launches-private-ai-tool-with-on-chain-hardware-verification">KuCoin News: Solana launches private AI tool with on-chain hardware verification</a></li>
+<li><a href="https://www.supercryptonews.com/solana-foundation-launches-on-chain-verification-infrastructure-for-private-ai/">Super Crypto News: On-chain verification infrastructure for private AI</a></li>
+<li><a href="https://solanacompass.com/news/solana-foundation-and-nito-launch-solana-confidential-compute-on-devnet-to-verify-private-ai-onchain">Solana Compass: Foundation and Nito launch Solana Confidential Compute</a></li>
+<li><a href="https://huggingnews.com/ai/solana-launches-tools-for-private-ai-with-onchain-hardware-verification-4ec62009">Hugging News: Solana debuts Confidential Compute tools</a></li>
+<li><a href="https://solana.ai/">solana.ai</a></li>
+<li><a href="https://trynito.ai/">tryNito.ai</a></li>
+</ul>
+<p>Added for the product page and the security background, plus <a href="https://thehackernews.com/2026/11/new-mior-and-skyfall-attacks-let-rogue.html">The Hacker News on Mior and Skyfall</a> and <a href="https://www.amd.com/en/resources/product-security/bulletin/amd-sb-3059.html">AMD-SB-3059</a>:</p>
+<ul>
+<li><a href="https://solana.ai/confidential-compute">Solana Confidential Compute product page</a></li>
+<li><a href="https://ceur-ws.org/Vol-3962/paper70.pdf">Comparison of confidential computing threat models (CEUR-WS survey)</a></li>
+<li><a href="https://thehackernews.com/2025/10/new-teefail-side-channel-attack.html">The Hacker News: TEE.Fail side-channel attack</a></li>
+<li><a href="https://ethresear.ch/t/physical-integrity-attestation-and-the-state-of-permissionless-tees/24964">ethresear.ch: Physical integrity, attestation, and the state of permissionless TEEs</a></li>
+</ul>
+<p>This guide was drafted with AI assistance, as of 22 November 2026. The beta is changing fast, so check the Foundation's current documentation before you rely on any detail.</p><p><a href="../">All guides</a> · <a href="../../">Back to ishvir.xyz</a></p></main></body></html>
